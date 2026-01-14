@@ -1,22 +1,117 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>HOST DETECTED</title>
+<meta charset="UTF-8">
+<title>HOST DETECTED</title>
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  background: black;
+  color: #00ffcc;
+  font-family: monospace;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ruido */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255,255,255,0.03),
+      rgba(255,255,255,0.03) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+  pointer-events: none;
+  animation: scan 0.15s infinite;
+}
+
+@keyframes scan {
+  0% { opacity: 0.15; }
+  50% { opacity: 0.35; }
+  100% { opacity: 0.15; }
+}
+
+#terminal {
+  padding: 5vh 5vw;
+  max-width: 900px;
+  line-height: 1.6;
+  font-size: 1rem;
+  text-shadow: 0 0 6px rgba(0,255,200,0.6);
+}
+
+.glitch {
+  position: relative;
+  animation: glitch 1.2s infinite;
+}
+
+@keyframes glitch {
+  0% { text-shadow: 2px 0 red; }
+  20% { text-shadow: -2px 0 cyan; }
+  40% { text-shadow: 2px 2px magenta; }
+  60% { text-shadow: -1px -1px lime; }
+  100% { text-shadow: 0 0 6px rgba(0,255,200,0.6); }
+}
+
+.cursor::after {
+  content: "█";
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+</style>
 </head>
-<body style="
-  background:black;
-  color:#00ffcc;
-  font-family:monospace;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:100vh;
-  margin:0;
-">
-  <div>
-    <h1>HOST DETECTED</h1>
-    <p>Sistema activo</p>
-  </div>
+
+<body>
+
+<div id="terminal" class="cursor"></div>
+
+<script>
+const payload = [
+  ">> HOST DETECTED",
+  ">> Iniciando protocolo de infección lingüística...",
+  "",
+  "El lenguaje no es un don, es un virus.",
+  "Una anomalía replicante que se injertó en la carne",
+  "para que la carne creyera tener alma.",
+  "",
+  "Desde entonces, cada palabra es un artificio de la memoria.",
+  "Cada frase una trampa."
+];
+
+const terminal = document.getElementById("terminal");
+let line = 0;
+let char = 0;
+
+function type() {
+  if (line < payload.length) {
+    if (char < payload[line].length) {
+      terminal.innerHTML += payload[line][char];
+      char++;
+      setTimeout(type, 35 + Math.random() * 40);
+    } else {
+      terminal.innerHTML += "<br>";
+      line++;
+      char = 0;
+      setTimeout(type, 400);
+    }
+  } else {
+    terminal.classList.remove("cursor");
+    terminal.classList.add("glitch");
+    terminal.innerHTML += "<br><br>>> INFECCIÓN COMPLETA";
+  }
+}
+
+setTimeout(type, 800);
+</script>
+
 </body>
 </html>
