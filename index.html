@@ -2,200 +2,455 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>HOST DETECTED</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>// METAPHORIC_VIRUS.exe</title>
 <style>
-html, body {
+* {
   margin: 0;
   padding: 0;
-  background: black;
-  color: #00ffcc;
-  font-family: monospace;
-  height: 100%;
-  overflow: hidden;
+  box-sizing: border-box;
 }
 
-/* interferencia */
-body::before {
-  content: "";
+body {
+  background: #000;
+  color: #00ffcc;
+  font-family: 'Courier New', monospace;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  cursor: none;
+}
+
+/* Cursor personalizado */
+#custom-cursor {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #00ffcc;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1000;
+  mix-blend-mode: difference;
+  transition: transform 0.1s;
+}
+
+/* Interferencia base */
+.interference {
   position: fixed;
   inset: 0;
-  background:
-    repeating-linear-gradient(
-      0deg,
-      rgba(255,255,255,0.04),
-      rgba(255,255,255,0.04) 1px,
-      transparent 1px,
-      transparent 2px
-    );
+  background: 
+    linear-gradient(rgba(0, 255, 200, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 200, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  animation: scan 8s linear infinite;
   pointer-events: none;
-  animation: scan 0.15s infinite;
+  z-index: 1;
 }
 
 @keyframes scan {
-  0% { opacity: 0.12; }
-  50% { opacity: 0.35; }
-  100% { opacity: 0.12; }
+  0% { transform: translateY(0); }
+  100% { transform: translateY(40px); }
 }
 
+/* Ruido estático */
+.noise {
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.15'/%3E%3C/svg%3E");
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Terminal principal */
 #terminal {
-  padding: 6vh 6vw;
-  max-width: 960px;
-  line-height: 1.7;
-  font-size: 1.35rem; /* ⬅️ TEXTO MÁS GRANDE */
-  text-shadow: 0 0 8px rgba(0,255,200,0.7);
+  position: relative;
+  padding: 8vh 10vw;
+  max-width: 1200px;
+  line-height: 1.8;
+  font-size: 1.5rem;
+  text-shadow: 
+    0 0 10px rgba(0, 255, 200, 0.8),
+    0 0 20px rgba(0, 255, 200, 0.3);
+  z-index: 3;
+  min-height: 100vh;
+  overflow: hidden;
 }
 
+/* Efecto de texto corrupto */
+.corrupt {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    transparent 65%,
+    rgba(0, 255, 200, 0.1) 75%,
+    rgba(0, 255, 200, 0.2) 85%,
+    transparent 95%
+  );
+  animation: corrupt-line 12s linear infinite;
+  pointer-events: none;
+  z-index: 4;
+}
+
+@keyframes corrupt-line {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100vh); }
+}
+
+/* Cursor parpadeante */
 .cursor::after {
   content: "█";
-  animation: blink 1s infinite;
+  animation: blink 1s infinite, glitch-cursor 3s infinite;
+  text-shadow: 0 0 15px #00ffcc;
 }
 
 @keyframes blink {
-  50% { opacity: 0; }
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
 }
 
-.glitch {
-  animation: glitch 0.7s infinite;
+@keyframes glitch-cursor {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-2px); }
+  20% { transform: translateX(2px); }
+  30% { transform: translateX(-1px); }
+  40% { transform: translateX(1px); }
 }
 
-@keyframes glitch {
-  0% { transform: translate(0); }
-  20% { transform: translate(-3px, 2px); }
-  40% { transform: translate(3px, -2px); }
-  60% { transform: translate(-2px, 1px); }
-  80% { transform: translate(2px, -3px); }
-  100% { transform: translate(0); }
-}
-
-/* capa de pixelación */
-#pixel {
+/* Efectos de glitch */
+.glitch-layer {
   position: fixed;
   inset: 0;
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(0,0,0,0.9),
-      rgba(0,0,0,0.9) 8px,
-      transparent 8px,
-      transparent 16px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      rgba(0,0,0,0.9),
-      rgba(0,0,0,0.9) 8px,
-      transparent 8px,
-      transparent 16px
-    );
-  opacity: 0;
+  background: inherit;
   pointer-events: none;
-  transition: opacity 1.2s;
+  opacity: 0;
   z-index: 5;
 }
 
-/* símbolo final */
-#symbol {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 6rem;
-  color: #00ffcc;
-  opacity: 0;
-  z-index: 6;
-  text-shadow: 0 0 20px rgba(0,255,200,0.9);
-  transition: opacity 1s;
+.glitch-active {
+  animation: glitch-burst 0.3s steps(2, end);
 }
 
-/* apagado */
-#shutdown {
+@keyframes glitch-burst {
+  0% {
+    opacity: 0.8;
+    transform: translateX(-4px);
+    clip-path: inset(20% 0 30% 0);
+  }
+  20% {
+    transform: translateX(4px);
+    clip-path: inset(10% 0 40% 0);
+  }
+  40% {
+    transform: translateX(-3px);
+    clip-path: inset(30% 0 20% 0);
+  }
+  60% {
+    transform: translateX(3px);
+    clip-path: inset(40% 0 10% 0);
+  }
+  80% {
+    transform: translateX(-2px);
+    clip-path: inset(25% 0 25% 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+    clip-path: inset(0);
+  }
+}
+
+/* Distorsión de píxeles */
+.pixelate {
   position: fixed;
   inset: 0;
-  background: black;
-  color: red;
+  background-image: url("data:image/svg+xml,%3Csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3Cpattern id='pixel' width='16' height='16' patternUnits='userSpaceOnUse'%3E%3Crect width='8' height='8' fill='rgba(0,255,200,0.05)'/%3E%3Crect x='8' y='8' width='8' height='8' fill='rgba(0,255,200,0.05)'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23pixel)' opacity='0'/%3E%3C/svg%3E");
+  opacity: 0;
+  pointer-events: none;
+  z-index: 6;
+  transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Símbolo final */
+.symbol {
+  position: fixed;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.2rem;
-  letter-spacing: 0.25em;
+  font-size: 8rem;
+  opacity: 0;
+  z-index: 7;
+  filter: 
+    drop-shadow(0 0 30px rgba(0, 255, 200, 0.7))
+    drop-shadow(0 0 60px rgba(0, 255, 200, 0.3));
+  transition: opacity 1.5s;
+  animation: symbol-pulse 4s infinite;
+}
+
+@keyframes symbol-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Apagado final */
+.shutdown {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  letter-spacing: 0.5em;
   opacity: 0;
   z-index: 10;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.shutdown span {
+  animation: shutdown-flicker 0.3s infinite;
+  text-shadow: 0 0 20px #ff0000;
+}
+
+@keyframes shutdown-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Partículas flotantes */
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(0, 255, 200, 0.6);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 1;
 }
 </style>
 </head>
 
 <body>
 
+<div class="interference"></div>
+<div class="noise"></div>
+<div class="corrupt"></div>
+<div id="custom-cursor"></div>
+
 <div id="terminal" class="cursor"></div>
-<div id="pixel"></div>
-<div id="symbol">👾</div>
-<div id="shutdown">SYSTEM HALTED</div>
+
+<div class="glitch-layer"></div>
+<div class="pixelate"></div>
+<div class="symbol">⸸</div>
+<div class="shutdown"><span>SYSTEM CORRUPTED</span></div>
 
 <script>
 const payload = [
-  ">> HOST DETECTED",
-  ">> Iniciando protocolo de infección lingüística...",
+  ">> HOST DETECTED [USER: " + navigator.userAgent.substring(0, 30) + "...]",
+  ">> INITIATING METAPHORIC INFECTION PROTOCOL...",
+  ">> LOADING LINGUISTIC PAYLOAD...",
   "",
-  "El lenguaje no es un don, es un virus.",
-  "Una anomalía replicante que se injertó en la carne",
-  "para que la carne creyera tener alma.",
+  "WARNING: LANGUAGE IS NOT A GIFT. IT IS A VIRUS.",
+  "A SELF-REPLICATING ANOMALY GRAFTED ONTO FLESH",
+  "SO THAT FLESH MIGHT BELIEVE IT HAS A SOUL.",
   "",
-  "Desde entonces, cada palabra es un artificio de la memoria.",
-  "Cada frase una trampa.",
+  "EVERY WORD IS A MEMORY ARTIFACT.",
+  "EVERY PHRASE A SEMANTIC TRAP.",
   "",
-  ">> ERROR: COHERENCIA SIMBÓLICA PERDIDA",
-  ">> COLAPSO INMINENTE"
+  ">> CRITICAL ERROR: SYMBOLIC COHERENCE LOST",
+  ">> REALITY MATRIX COLLAPSING...",
+  ">> INITIATING SYSTEM FREEZE"
 ];
 
 const terminal = document.getElementById("terminal");
-const pixel = document.getElementById("pixel");
-const symbol = document.getElementById("symbol");
-const shutdown = document.getElementById("shutdown");
+const glitchLayer = document.querySelector('.glitch-layer');
+const pixelate = document.querySelector('.pixelate');
+const symbol = document.querySelector('.symbol');
+const shutdown = document.querySelector('.shutdown');
+const customCursor = document.getElementById('custom-cursor');
 
 let line = 0;
 let char = 0;
+let glitchInterval;
+let particles = [];
 
+// Crear partículas flotantes
+function createParticles() {
+  for (let i = 0; i < 30; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + 'vw';
+    particle.style.top = Math.random() * 100 + 'vh';
+    particle.style.animation = `float ${5 + Math.random() * 10}s infinite linear`;
+    document.body.appendChild(particle);
+    particles.push(particle);
+  }
+}
+
+// Efecto de glitch aleatorio
+function triggerGlitch() {
+  glitchLayer.classList.add('glitch-active');
+  setTimeout(() => {
+    glitchLayer.classList.remove('glitch-active');
+  }, 300);
+  
+  // Distorsión de audio simulada
+  if (Math.random() > 0.7) {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    oscillator.frequency.setValueAtTime(100 + Math.random() * 500, audioContext.currentTime);
+    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.3);
+    
+    oscillator.start();
+    oscillator.stop(audioContext.currentTime + 0.3);
+  }
+}
+
+// Mover cursor personalizado
+document.addEventListener('mousemove', (e) => {
+  customCursor.style.left = e.clientX + 'px';
+  customCursor.style.top = e.clientY + 'px';
+  
+  if (Math.random() > 0.95) {
+    customCursor.style.transform = `scale(${1 + Math.random() * 0.5})`;
+    setTimeout(() => {
+      customCursor.style.transform = 'scale(1)';
+    }, 100);
+  }
+});
+
+// Escribir texto
 function type() {
   if (line < payload.length) {
     if (char < payload[line].length) {
       terminal.innerHTML += payload[line][char];
       char++;
-      setTimeout(type, 28 + Math.random() * 45);
+      
+      // Glitch aleatorio durante escritura
+      if (Math.random() > 0.92) {
+        triggerGlitch();
+      }
+      
+      setTimeout(type, 25 + Math.random() * 40);
     } else {
-      terminal.innerHTML += "<br>";
+      terminal.innerHTML += "<br><br>";
       line++;
       char = 0;
-      setTimeout(type, 350);
+      setTimeout(type, 200 + Math.random() * 300);
     }
   } else {
-    terminal.classList.remove("cursor");
-    terminal.classList.add("glitch");
-
-    // pixelación progresiva
-    setTimeout(() => {
-      pixel.style.opacity = "0.6";
-    }, 800);
-
-    // símbolo
-    setTimeout(() => {
-      symbol.style.opacity = "1";
-    }, 1600);
-
-    // apagado
-    setTimeout(() => {
-      shutdown.style.opacity = "1";
-    }, 2600);
-
-    // negro absoluto
-    setTimeout(() => {
-      document.body.innerHTML = "";
-      document.body.style.background = "black";
-    }, 3800);
+    startCorruptionSequence();
   }
 }
 
-setTimeout(type, 700);
+// Secuencia de corrupción final
+function startCorruptionSequence() {
+  terminal.classList.remove('cursor');
+  
+  // Iniciar glitches constantes
+  glitchInterval = setInterval(() => {
+    triggerGlitch();
+  }, 800);
+  
+  // Pixelación progresiva
+  setTimeout(() => {
+    pixelate.style.opacity = "0.8";
+  }, 500);
+  
+  // Distorsión máxima
+  setTimeout(() => {
+    clearInterval(glitchInterval);
+    glitchLayer.style.animation = "glitch-burst 0.5s infinite";
+    document.body.style.cursor = "none";
+  }, 1500);
+  
+  // Símbolo aparece
+  setTimeout(() => {
+    symbol.style.opacity = "1";
+    pixelate.style.opacity = "1";
+    
+    // Hacer vibrar la pantalla
+    document.body.style.animation = "vibrate 0.1s infinite";
+  }, 2500);
+  
+  // Apagado final
+  setTimeout(() => {
+    symbol.style.opacity = "0";
+    shutdown.style.opacity = "1";
+    document.body.style.animation = "";
+    
+    // Destruir partículas
+    particles.forEach(p => p.remove());
+  }, 4000);
+  
+  // Pantalla en negro
+  setTimeout(() => {
+    document.body.innerHTML = `
+      <style>
+        body {
+          background: #000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          margin: 0;
+        }
+        .final-message {
+          color: #ff0000;
+          font-family: monospace;
+          font-size: 1.2rem;
+          text-align: center;
+          opacity: 0;
+          animation: fade-in 3s forwards;
+        }
+        @keyframes fade-in {
+          to { opacity: 0.7; }
+        }
+      </style>
+      <div class="final-message">
+        SYSTEM FROZEN<br>
+        METAPHORIC VIRUS ACTIVE<br>
+        [COLD BOOT REQUIRED]
+      </div>
+    `;
+  }, 6000);
+}
+
+// Inicialización
+setTimeout(() => {
+  createParticles();
+  type();
+  
+  // Glitches aleatorios durante ejecución
+  setInterval(() => {
+    if (Math.random() > 0.85 && line < payload.length) {
+      triggerGlitch();
+    }
+  }, 2000);
+}, 1000);
+
+// Efecto de teclas aleatorias
+document.addEventListener('keydown', (e) => {
+  if (Math.random() > 0.5) {
+    triggerGlitch();
+  }
+});
+
+// Interacción táctil
+document.addEventListener('touchstart', () => {
+  triggerGlitch();
+});
 </script>
 
 </body>
