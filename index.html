@@ -15,7 +15,6 @@ html, body {
   overflow: hidden;
 }
 
-/* ruido */
 body::before {
   content: "";
   position: fixed;
@@ -23,8 +22,8 @@ body::before {
   background:
     repeating-linear-gradient(
       0deg,
-      rgba(255,255,255,0.03),
-      rgba(255,255,255,0.03) 1px,
+      rgba(255,255,255,0.04),
+      rgba(255,255,255,0.04) 1px,
       transparent 1px,
       transparent 2px
     );
@@ -33,9 +32,9 @@ body::before {
 }
 
 @keyframes scan {
-  0% { opacity: 0.15; }
+  0% { opacity: 0.1; }
   50% { opacity: 0.35; }
-  100% { opacity: 0.15; }
+  100% { opacity: 0.1; }
 }
 
 #terminal {
@@ -46,19 +45,6 @@ body::before {
   text-shadow: 0 0 6px rgba(0,255,200,0.6);
 }
 
-.glitch {
-  position: relative;
-  animation: glitch 1.2s infinite;
-}
-
-@keyframes glitch {
-  0% { text-shadow: 2px 0 red; }
-  20% { text-shadow: -2px 0 cyan; }
-  40% { text-shadow: 2px 2px magenta; }
-  60% { text-shadow: -1px -1px lime; }
-  100% { text-shadow: 0 0 6px rgba(0,255,200,0.6); }
-}
-
 .cursor::after {
   content: "█";
   animation: blink 1s infinite;
@@ -67,12 +53,40 @@ body::before {
 @keyframes blink {
   50% { opacity: 0; }
 }
+
+.glitch {
+  animation: glitch 0.8s infinite;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, 1px); }
+  80% { transform: translate(1px, -2px); }
+  100% { transform: translate(0); }
+}
+
+#shutdown {
+  position: fixed;
+  inset: 0;
+  background: black;
+  color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  letter-spacing: 0.2em;
+  opacity: 0;
+  z-index: 10;
+}
 </style>
 </head>
 
 <body>
 
 <div id="terminal" class="cursor"></div>
+<div id="shutdown">SYSTEM HALTED</div>
 
 <script>
 const payload = [
@@ -84,10 +98,15 @@ const payload = [
   "para que la carne creyera tener alma.",
   "",
   "Desde entonces, cada palabra es un artificio de la memoria.",
-  "Cada frase una trampa."
+  "Cada frase una trampa.",
+  "",
+  ">> ERROR: INTEGRIDAD DEL SISTEMA COMPROMETIDA",
+  ">> FINALIZANDO PROCESOS..."
 ];
 
 const terminal = document.getElementById("terminal");
+const shutdown = document.getElementById("shutdown");
+
 let line = 0;
 let char = 0;
 
@@ -96,21 +115,29 @@ function type() {
     if (char < payload[line].length) {
       terminal.innerHTML += payload[line][char];
       char++;
-      setTimeout(type, 35 + Math.random() * 40);
+      setTimeout(type, 30 + Math.random() * 40);
     } else {
       terminal.innerHTML += "<br>";
       line++;
       char = 0;
-      setTimeout(type, 400);
+      setTimeout(type, 300);
     }
   } else {
     terminal.classList.remove("cursor");
     terminal.classList.add("glitch");
-    terminal.innerHTML += "<br><br>>> INFECCIÓN COMPLETA";
+
+    setTimeout(() => {
+      shutdown.style.opacity = "1";
+    }, 1200);
+
+    setTimeout(() => {
+      document.body.innerHTML = "";
+      document.body.style.background = "black";
+    }, 2600);
   }
 }
 
-setTimeout(type, 800);
+setTimeout(type, 700);
 </script>
 
 </body>
